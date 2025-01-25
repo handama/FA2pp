@@ -15,6 +15,7 @@ class FAVector {
 public:
 	using _Myt = typename FAVector<_Ty, _A>;
 	using allocator_type = _A;
+	using traits_type = std::allocator_traits<_A>;
 	using size_type = typename _A::size_type;
 	using difference_type = typename _A::difference_type;
 	using value_type = typename _A::value_type;
@@ -41,7 +42,7 @@ public:
 	FAVector(const _Myt& _X)
 		: allocator(_X.allocator)
 	{
-		_First = allocator.allocate(_X.size(), (void*)0);
+		_First = allocator.allocate(_X.size());
 		_Last = _Ucopy(_X.begin(), _X.end(), _First);
 		_End = _Last;
 	}
@@ -89,7 +90,7 @@ public:
 	{
 		if (capacity() < _N)
 		{
-			iterator _S = allocator.allocate(_N, (void*)0);
+			iterator _S = allocator.allocate(_N);
 			_Ucopy(_First, _Last, _S);
 			_Destroy(_First, _Last);
 			allocator.deallocate(_First, _End - _First);
@@ -206,7 +207,7 @@ public:
 		if (_End - _Last < _M)
 		{
 			size_type _N = size() + (_M < size() ? size() : _M);
-			iterator _S = allocator.allocate(_N, (void*)0);
+			iterator _S = allocator.allocate(_N);
 			iterator _Q = _Ucopy(_First, _P, _S);
 			_Ufill(_Q, _M, _X);
 			_Ucopy(_P, _Last, _Q + _M);
@@ -220,14 +221,14 @@ public:
 		{
 			_Ucopy(_P, _Last, _P + _M);
 			_Ufill(_Last, _M - (_Last - _P), _X);
-			fill(_P, _Last, _X);
+			std::fill(_P, _Last, _X);
 			_Last += _M;
 		}
 		else if (0 < _M)
 		{
 			_Ucopy(_Last - _M, _Last, _Last);
-			copy_backward(_P, _Last - _M, _Last);
-			fill(_P, _P + _M, _X);
+			std::copy_backward(_P, _Last - _M, _Last);
+			std::fill(_P, _P + _M, _X);
 			_Last += _M;
 		}
 	}
@@ -238,7 +239,7 @@ public:
 		if (_End - _Last < _M)
 		{
 			size_type _N = size() + (_M < size() ? size() : _M);
-			iterator _S = allocator.allocate(_N, (void*)0);
+			iterator _S = allocator.allocate(_N);
 			iterator _Q = _Ucopy(_First, _P, _S);
 			_Q = _Ucopy(_F, _L, _Q);
 			_Ucopy(_P, _Last, _Q);
@@ -328,19 +329,19 @@ protected:
 	void _Destroy(iterator _F, iterator _L)
 	{
 		for (; _F != _L; ++_F)
-			allocator.destroy(_F);
+			traits_type::destroy(allocator, _F);
 	}
 	iterator _Ucopy(const_iterator _F, const_iterator _L,
 		iterator _P)
 	{
 		for (; _F != _L; ++_P, ++_F)
-			allocator.construct(_P, *_F);
+			traits_type::construct(allocator, _P, *_F);
 		return (_P);
 	}
 	void _Ufill(iterator _F, size_type _N, const _Ty& _X)
 	{
 		for (; 0 < _N; --_N, ++_F)
-			allocator.construct(_F, _X);
+			traits_type::construct(allocator, _F, _X);
 	}
 	void _Xran() const
 	{

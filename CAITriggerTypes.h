@@ -33,4 +33,9 @@ public:
 	BOOL			BOOL_AvailableInSkirmish; // 808
 	INT				Unknown_812; // As u see, there should be nothing :/ Fill 812 - 816
 	ppmfc::CString			CString_MultiHouse; // 816
+
+	void OnSelchangeAitriggertype()
+	{
+		JMP_THIS(0x4057F0);
+	}
 };

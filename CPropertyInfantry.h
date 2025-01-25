@@ -23,6 +23,8 @@ public:
 
 	CPropertyInfantry(ppmfc::CWnd* pParent = nullptr) { JMP_THIS(0x451640); }
 
+	void Translate() { JMP_THIS(0x451DB0); }
+
 private:
 	CPropertyInfantry(noinit_t) {}
 };

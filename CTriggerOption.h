@@ -29,4 +29,5 @@ public:
 
 	void Update() { JMP_THIS(0x500970); }
 	void OnETNameEdited() { JMP_THIS(0x501340); }
+	void OnEditchangeAttachedtrigger() { JMP_THIS(0x502250); }
 };

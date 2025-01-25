@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <map>
+#include "../FA2sp/Logger.h"
 
 // Forward Definations
 class INISection;
@@ -74,6 +75,41 @@ public:
 	INIIndiceDict& GetIndices()
 		{ return *reinterpret_cast<INIIndiceDict*>(&this->IndicesDictionary); }
 
+	ppmfc::CString* TryGetString(ppmfc::CString pKey) {
+		auto pEntries = &this->GetEntities();
+		auto itrKey = pEntries->find(pKey);
+		if (itrKey != pEntries->end())
+			return (ppmfc::CString*)(&itrKey->second);
+		else
+			return nullptr;
+	}
+	ppmfc::CString GetString(ppmfc::CString pKey, ppmfc::CString pDefault = "") {
+		if (auto const pStr = TryGetString(pKey)) {
+			ppmfc::CString ret = *pStr;
+			ret.Trim();
+			return ret;
+		}
+		else
+			return pDefault;
+	}
+	int GetInteger(ppmfc::CString pKey, int nDefault = 0) {
+		ppmfc::CString&& pStr = this->GetString(pKey, "");
+		int ret = 0;
+		if (sscanf_s(pStr, "%d", &ret) == 1)
+			return ret;
+		return nDefault;
+	}
+	float GetSingle(ppmfc::CString pKey, float nDefault = 0) {
+		ppmfc::CString&& pStr = this->GetString(pKey, "");
+		float ret = 0;
+		if (sscanf_s(pStr, "%f", &ret) == 1)
+		{
+			if (strchr(pStr, '%%'))
+				ret *= 0.01f;
+			return ret;
+		}
+		return nDefault;
+	}
 
 private:
 	// In fact we can use a union here. However, to make it
@@ -123,7 +159,7 @@ public:
 
 public:
 	void Release() { JMP_THIS(0x4527E0); } // DTOR
-	int ClearAndLoad(const char* lpPath, int nUnused = 0) { JMP_THIS(0x4526D0); }
+	int ClearAndLoad(const char* lpPath, int bTrimSpace = 0) { JMP_THIS(0x4526D0); }
 	bool WriteToFile(const char* lpPath) { JMP_THIS(0x4536B0); }
 	// return values:
 	// 0 for success
@@ -362,15 +398,22 @@ public:
 	}
 
 	ppmfc::CString GetString(ppmfc::CString pSection, ppmfc::CString pKey, ppmfc::CString pDefault = "") {
-		if (auto const pStr = TryGetString(pSection, pKey))
-			return *pStr;
+		if (auto const pStr = TryGetString(pSection, pKey)) {
+			ppmfc::CString ret = *pStr;
+			ret.Trim();
+			return ret;
+		}
+			
 		else
 			return pDefault;
 	}
 
 	ppmfc::CString GetString(INISection* pSection, ppmfc::CString pKey, ppmfc::CString pDefault = "") {
-		if (auto const pStr = TryGetString(pSection, pKey))
-			return *pStr;
+		if (auto const pStr = TryGetString(pSection, pKey)) {
+			ppmfc::CString ret = *pStr;
+			ret.Trim();
+			return ret;
+		}
 		else
 			return pDefault;
 	}
@@ -526,5 +569,62 @@ public:
 			ret[idx++] = x.second;
 
 		return ret;
+	}
+
+	//std::map<unsigned int, ppmfc::CString> ParseIndiciesData(ppmfc::CString pSection)
+	//{
+	//	std::map<unsigned int, ppmfc::CString> ret;
+	//	auto section = GetSection(pSection);
+	//	if (!section)
+	//		return ret;
+	//
+	//	std::map<unsigned int, ppmfc::CString> tmp;
+	//	std::vector<ppmfc::CString> tmp2;
+	//	for (auto& ent : section->GetEntities())
+	//	{
+	//		auto& indexDict = section->GetIndices();
+	//		auto&& idxitr = indexDict.find(ent.first);
+	//		if (idxitr != indexDict.end())
+	//			tmp[idxitr->second] = idxitr->first;
+	//		else
+	//			tmp2.push_back(ent.first);	
+	//	}
+	//	size_t idx = 0;
+	//	for (auto& x : tmp)
+	//	{
+	//		ret[idx++] = x.second;
+	//		for (auto& y : tmp2)
+	//			if (idx == atoi(y))
+	//				ret[idx++] = y;
+	//	}
+	//	return ret;
+	//}
+
+	bool WriteBool(ppmfc::CString pSection, ppmfc::CString pKey, bool pValue)
+	{
+		if (pSection.IsEmpty() || pKey.IsEmpty())
+			return false;
+
+		bool bExisted = true;
+
+		auto section = GameCreate<INISection>();
+		auto itr = InsertSection(pSection, section);
+		GameDelete(section);
+
+		if (itr.second)
+			bExisted = false;
+
+		auto itr2 = InsertPair(itr.first->second.GetEntities(), pKey, ppmfc::CString());
+		if (itr2.second)
+			bExisted = false;
+		ppmfc::CString result;
+		if (pValue)
+			result = "yes";
+		else
+			result = "no";
+
+		new(&itr2.first->second) ppmfc::CString(result);
+
+		return bExisted;
 	}
 };

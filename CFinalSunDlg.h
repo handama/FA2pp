@@ -44,6 +44,7 @@ public:
 	void Update() { JMP_THIS(0x432010); }
 	void LoadMap(LPCSTR lpPath) { JMP_THIS(0x4374B0); }
 	void Settings() { JMP_THIS(0x43D0E0); }
+	void OnEditAitriggers() { JMP_THIS(0x433190); }
 	enum class FASoundType { Normal = 1, Error, Warning };
 	static void __cdecl PlaySound(FASoundType eSound) { JMP_STD(0x43CE00); }
 public:

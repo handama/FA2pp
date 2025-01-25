@@ -24,6 +24,8 @@ public:
 
 	CPropertyUnit(ppmfc::CWnd* pParent = nullptr) { JMP_THIS(0x50E8E0); }
 
+	void Translate() { JMP_THIS(0x50F150); }
+
 private:
 	CPropertyUnit(noinit_t) {}
 };

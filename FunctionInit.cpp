@@ -118,9 +118,10 @@ RGBClass::operator HSVClass() const
 	return { (unsigned char)hue, (unsigned char)saturation, (unsigned char)value };
 }
 
-void* CLoading::ReadWholeFile(const char* filename, DWORD* pDwSize)
+void* CLoading::ReadWholeFile(const char* filename, DWORD* pDwSize, bool fa2path)
 {
 	ppmfc::CString filepath = CFinalSunApp::FilePath();
+	if (fa2path) filepath = CFinalSunApp::ExePath();
 	filepath += filename;
 	std::ifstream fin;
 	fin.open(filepath, std::ios::in | std::ios::binary);
@@ -155,7 +156,7 @@ void* CLoading::ReadWholeFile(const char* filename, DWORD* pDwSize)
 	return nullptr;
 }
 
-bool CLoading::HasFile(ppmfc::CString filename)
+bool CLoading::HasFile(ppmfc::CString filename, int nMix)
 {
 	ppmfc::CString filepath = CFinalSunApp::FilePath();
 	filepath += filename;
@@ -166,7 +167,11 @@ bool CLoading::HasFile(ppmfc::CString filename)
 		fin.close();
 		return true;
 	}
-	auto nMix = CLoading::Instance->SearchFile(filename);
+	if (nMix == -114)
+	{
+		nMix = CLoading::Instance->SearchFile(filename);
+		return CMixFile::HasFile(filename, nMix);
+	}
 	return CMixFile::HasFile(filename, nMix);
 }
 

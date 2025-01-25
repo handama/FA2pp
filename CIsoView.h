@@ -100,15 +100,16 @@ public:
 
     void MoveToWP(UINT nWaypoint) { JMP_THIS(0x4766A0); }
     void MoveTo(int X, int Y) { JMP_THIS(0x4763D0); }
-    void MoveToMapCoord(int X, int Y) 
+    void MoveToMapCoord(int X, int Y)
     {
+
         int nMapCoord = CMapData::Instance->GetCoordIndex(X, Y);
         RECT rect;
         this->GetWindowRect(&rect);
-        this->MoveTo(
-            30 * (CMapData::Instance->MapWidthPlusHeight + X - Y) - (rect.right - rect.left) / 2 - rect.left,
-            15 * (Y + X) - CMapData::Instance->CellDatas[nMapCoord].Height - (rect.bottom - rect.top) / 2 - rect.top
-        );
+        int x = 30 * (CMapData::Instance->MapWidthPlusHeight + X - Y) - (rect.right - rect.left) / 2 - rect.left;
+        int y = 15 * (Y + X) - CMapData::Instance->CellDatas[nMapCoord].Height - (rect.bottom - rect.top) / 2 - rect.top;
+        this->MoveTo(x, y);
+
         this->RedrawWindow(nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
     }
 
@@ -124,11 +125,21 @@ public:
 
     void UpdateStatusBar(int X, int Y) { JMP_THIS(0x469E70); }
     void DrawMouseAttachedStuff(int X, int Y, LPDIRECTDRAWSURFACE7 lpSurface) { JMP_THIS(0x46BC80); }
+    void DrawMouseAttachedStuff(int x, int y) { JMP_THIS(0x46BC80); }
 
     void AutoConnectOverlayAt(int X, int Y) { JMP_THIS(0x469B20); }
 
+    void AutoLevel() { JMP_THIS(0x46D810); }
+
+    void UpdateDialog(BOOL bRepos) { JMP_THIS(0x456C10); }
+
+    // 0 infantry, 1 structure, 2 aircraft, 3 unit
+    void HandleProperties(int index, int type) { JMP_THIS(0x45EDC0); }
+
+    
+
     MapCoord StartCell; // which cell the left button clicked on
-    int Height_48;
+    int FlattenHeight;
     int Unknown_4C;
     int Unknown_50;
     int Unknown_54;
@@ -152,11 +163,12 @@ public:
     ppmfc::CMenu Menu;
     BOOL IsInitializing;
     RECT Rect_C0;
-    int Unknown_D0;
+    int LineColor;
     ppmfc::CPoint LineFrom;
-    ppmfc::CPoint LineTo;
+    ppmfc::CPoint LineToC;
+    // 0 infantry, 1 structure, 2 aircraft, 3 unit, 4 terrain, 5 celltag, 6 waypoint
     int CurrentCellObjectType;
     int CurrentCellObjectIndex;
-    int Flag_EC;
-    int Unknown_F0;
+    BOOL Drag;
+    BOOL Moved;
 };

@@ -56,5 +56,14 @@ public:
 	{
 		JMP_THIS(0x4E7900);
 	}
+	void OnCBCurrentTaskForceSelectedChanged()
+	{
+		JMP_THIS(0x4EB760);
+	}
+	
+	void OnCBCurrentScriptSelectedChanged()
+	{
+		JMP_THIS(0x4EB4D0);
+	}
 
 };

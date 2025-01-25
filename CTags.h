@@ -15,4 +15,6 @@ public:
 
 	virtual void DoDataExchange(ppmfc::CDataExchange* pDX) override
 		{ JMP_THIS(0x4DE780); }
+	void OnCBCurrentTagSelectedChanged()
+		{ JMP_THIS(0x4DEF80); }
 };

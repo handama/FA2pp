@@ -62,6 +62,9 @@ public:
 	void EndDialog(int nResult)
 		_PPMFC_THISCALL(0x551F80);
 
+	static const AFX_MSGMAP* GetMessageMapStatic()
+		_PPMFC_THISCALL(0x5518DD);
+
 public:
 	UINT m_nIDHelp;
 	LPCTSTR m_lpszTemplateName;

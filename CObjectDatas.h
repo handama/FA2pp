@@ -2,6 +2,8 @@
 
 #include <MFC/ppmfc_cstring.h>
 
+#include <cstring>
+
 enum class ObjectType
 {
     Infantry = 0,
@@ -16,6 +18,26 @@ enum class ObjectType
 class CInfantryData
 {
 public:
+    CInfantryData& operator=(const CInfantryData& another)
+    {
+        House = another.House;
+        TypeID = another.TypeID;
+        Health = another.Health;
+        Y = another.Y;
+        X = another.X;
+        SubCell = another.SubCell;
+        Status = another.Status;
+        Facing = another.Facing;
+        Tag = another.Tag;
+        VeterancyPercentage = another.VeterancyPercentage;
+        Group = another.Group;
+        IsAboveGround = another.IsAboveGround;
+        AutoNORecruitType = another.AutoNORecruitType;
+        AutoYESRecruitType = another.AutoYESRecruitType;
+        Flag = another.Flag;
+        return *this;
+    };
+
     ppmfc::CString House;
     ppmfc::CString TypeID;
     ppmfc::CString Health;
@@ -36,6 +58,29 @@ public:
 class CBuildingData
 {
 public:
+    CBuildingData& operator=(const CBuildingData& another)
+    {
+        House = another.House;
+        TypeID = another.TypeID;
+        Health = another.Health;
+        Y = another.Y;
+        X = another.X;
+        Facing = another.Facing;
+        Tag = another.Tag;
+        AISellable = another.AISellable;
+        AIRebuildable = another.AIRebuildable;
+        PoweredOn = another.PoweredOn;
+        Upgrades = another.Upgrades;
+        SpotLight = another.SpotLight;
+        Upgrade1 = another.Upgrade1;
+        Upgrade2 = another.Upgrade2;
+        Upgrade3 = another.Upgrade3;
+        AIRepairable = another.AIRepairable;
+        Nominal = another.Nominal;
+        Flag = another.Flag;
+        return *this;
+    };
+
     ppmfc::CString House;
     ppmfc::CString TypeID;
     ppmfc::CString Health;
@@ -59,6 +104,26 @@ public:
 class CUnitData
 {
 public:
+    CUnitData& operator=(const CUnitData& another)
+    {
+        House = another.House;
+        TypeID = another.TypeID;
+        Health = another.Health;
+        Y = another.Y;
+        X = another.X;
+        Facing = another.Facing;
+        Status = another.Status;
+        Tag = another.Tag;
+        VeterancyPercentage = another.VeterancyPercentage;
+        Group = another.Group;
+        IsAboveGround = another.IsAboveGround;
+        FollowsIndex = another.FollowsIndex;
+        AutoNORecruitType = another.AutoNORecruitType;
+        AutoYESRecruitType = another.AutoYESRecruitType;
+        Flag = another.Flag;
+        return *this;
+    };
+
     ppmfc::CString House;
     ppmfc::CString TypeID;
     ppmfc::CString Health;
@@ -79,6 +144,24 @@ public:
 class CAircraftData
 {
 public:
+    CAircraftData& operator=(const CAircraftData& another)
+    {
+        House = another.House;
+        TypeID = another.TypeID;
+        Health = another.Health;
+        Y = another.Y;
+        X = another.X;
+        Facing = another.Facing;
+        Status = another.Status;
+        Tag = another.Tag;
+        VeterancyPercentage = another.VeterancyPercentage;
+        Group = another.Group;
+        AutoNORecruitType = another.AutoNORecruitType;
+        AutoYESRecruitType = another.AutoYESRecruitType;
+        Flag = another.Flag;
+        return *this;
+    };
+
     ppmfc::CString House;
     ppmfc::CString TypeID;
     ppmfc::CString Health;
@@ -97,6 +180,15 @@ public:
 class CTerrainData
 {
 public:
+    CTerrainData& operator=(const CTerrainData& another)
+    {
+        TypeID = another.TypeID;
+        Y = another.Y;
+        X = another.X;
+        Flag = another.Flag;
+        return *this;
+    };
+
     ppmfc::CString TypeID;
     int Y;
     int X;
@@ -106,6 +198,15 @@ public:
 class CSmudgeData
 {
 public:
+    CSmudgeData& operator=(const CSmudgeData& another)
+    {
+        TypeID = another.TypeID;
+        Y = another.Y;
+        X = another.X;
+        Flag = another.Flag;
+        return *this;
+    };
+
     ppmfc::CString TypeID;
     int Y;
     int X;

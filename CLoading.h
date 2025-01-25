@@ -56,6 +56,7 @@ public:
 	// 0 : Not a specific theater
 	// 1 - 6 : TEM SNO URB UBN LUN DES
 	int SearchFile(const char* pName, char* pTheaterType = nullptr) { JMP_THIS(0x48A650) }
+	void Load() { JMP_THIS(0x479CE0) }
 	void LoadTSINI(const char* pFile, CINI* pINI, BOOL bMerge) { JMP_THIS(0x47FFB0) }
 	void GetSHPValidRange(unsigned char* pData, int Width, int Height, int* OutBegin, 
 		int* OutEnd, BOOL bUnknown = FALSE, int* pUnknown = nullptr) // Last one is realtived to tmp drawing
@@ -180,8 +181,8 @@ public:
 			return (Palette*)(0x72A8C4);
 		return nullptr;
 	}
-	void* ReadWholeFile(const char* filename, DWORD* pDwSize = nullptr);
-	bool HasFile(ppmfc::CString filename);
+	void* ReadWholeFile(const char* filename, DWORD* pDwSize = nullptr, bool fa2path = false);
+	bool HasFile(ppmfc::CString filename, int nMix = -114);
 	void SetTheaterLetter(ppmfc::CString& string)
 	{
 		if (this->TheaterIdentifier != 0)

@@ -1,12 +1,12 @@
 #pragma once
 
+#include <FA2PPCore.h>
 #include <Helpers/EnumFlags.h>
 
 #include <CINI.h>
 #include <CObjectDatas.h>
 #include <CPalette.h>
 #include <CTileTypeClass.h>
-
 #include <Structures/FAVector.h>
 
 class Waypoints
@@ -128,6 +128,43 @@ public:
     } Flag;
 };
 
+
+struct CellDataExt
+{
+    int X;
+    int Y;
+
+    // for preview
+    bool AroundPlayerLocation = false;
+    bool AroundHighBridge = false;
+
+    // for locate cell
+    bool drawCell = false;
+
+    // for copy paste
+    CBuildingData BuildingData;
+    CAircraftData AircraftData;
+    CInfantryData InfantryData[3];
+    CUnitData UnitData;
+    ppmfc::CString TerrainData;
+    ppmfc::CString SmudgeData;
+
+    // for smooth water
+    bool IsWater;
+    bool Processed;
+
+    // for raise ground
+    bool Adjusted;
+    bool CreateSlope;
+
+    // for create shore
+    bool ShoreProcessed;
+    bool ShoreLATNeeded;
+
+    //for terrain generation
+    bool AddRandomTile;
+};
+
 #pragma pack(push, 1)
 struct IsoMapPack4Entry
 {
@@ -153,6 +190,23 @@ struct IsoMapPack5Entry
 
 struct CBuildingRenderData
 {
+    CBuildingRenderData& operator=(const CBuildingRenderData& another)
+    {
+        HouseColor = another.HouseColor;
+        ID = another.ID;
+        X = another.X;
+        Y = another.Y;
+        Facing = another.Facing;
+        Strength = another.Strength;
+        PowerUpCount = another.PowerUpCount;
+        PowerUp1 = another.PowerUp1;
+        PowerUp2 = another.PowerUp2;
+        PowerUp3 = another.PowerUp3;
+
+
+        return *this;
+    };
+
     ColorStruct HouseColor;
     ppmfc::CString ID;
     short X;
@@ -294,6 +348,7 @@ public:
 
     void LoadMap(const char* pMapPath) { JMP_THIS(0x49D2C0); }
     void UnpackData() { JMP_THIS(0x49EE50); } // called in LoadMap
+    void CreateMap(int dwWidth, int dwHeight, const char* lpTerrainType, int dwGroundHeight) { JMP_THIS(0x4B85D0); }
 
     // use nullptr to reload all
     void InitializeBuildingTypes(const char* ID) { JMP_THIS(0x4B5460); } 
@@ -320,6 +375,25 @@ public:
     { 
         return IsCoordInMap(GetXFromCoordIndex(CoordIndex), GetYFromCoordIndex(CoordIndex)); 
     }
+    int GetInfantryAt_pos(int dwPos, int dwSubPos = 0)
+    {
+        if (IsCoordInMap(dwPos) && dwSubPos >= 0 && dwSubPos <= 2)
+            return CellDatas[dwPos].Infantry[dwSubPos];
+
+        return -1;
+    }
+    int GetInfantryCountAt(int dwPos)
+    {
+        int i;
+        int sc = 0;
+        if (IsCoordInMap(dwPos))
+            for (i = 0; i < 3; i++)
+            {
+                if (CellDatas[dwPos].Infantry[i] > -1) sc++;
+            }
+
+        return sc;
+    }
 
     void SetTileAt(unsigned nIndex, unsigned int nTileCount, char nTileSubIndex = 0) { JMP_THIS(0x416550); }
 
@@ -340,16 +414,42 @@ public:
         { JMP_THIS(0x4B0060); }
     void DeleteAircraftData(int aircraftID) { JMP_THIS(0x4A98B0); }
     void GetAircraftData(int aircraftID, CAircraftData& data) { JMP_THIS(0x4AF430); }
+
+
+    void GetTerrainData(int terrainID, ppmfc::CString lpType) { JMP_THIS(0x4B1740); }
+    void DeleteTerrainData(int index) { JMP_THIS(0x4AA0C0); }
+    void SetTerrainData(LPCTSTR lpType, int nCoord, int suggestedIndex = -1) { JMP_THIS(0x4B17A0); }
+
+    void SetSmudgeData(CSmudgeData* pData) { JMP_THIS(0x4C9CF0); }
+    void DeleteSmudgeData(int index) { JMP_THIS(0x4C9F40); }
+
     
     void AddTiberium(unsigned char overlay, unsigned char overlaydata) { JMP_THIS(0x4A1DB0); }
     void DeleteTiberium(unsigned char overlay, unsigned char overlaydata) { JMP_THIS(0x4A17C0); }
+    void SmoothTiberium(int dwPos) { JMP_THIS(0x4C4480); }
+
+    void SetOverlayAt(int dwPos, unsigned char overlay) { JMP_THIS(0x4A16C0); }
+    void SetOverlayDataAt(int dwPos, unsigned char overlaydata) { JMP_THIS(0x4A2A10); }
+    unsigned char GetOverlayAt(int dwPos)
+    {
+        if (dwPos > CellDataCount) return 0;
+        return CellDatas[dwPos].Overlay;
+    }
+    unsigned char GetOverlayDataAt(int dwPos)
+    {
+        if (dwPos > CellDataCount) return 0;
+        return CellDatas[dwPos].OverlayData;
+    }
 
     void SaveUndoRedoData(bool flag, int L, int T, int R, int B) { JMP_THIS(0x4BB990); }
     void DoUndo() JMP_THIS(0x4BBEC0);
 
+    void CreateShore(int left, int top, int right, int bottom, bool bRemoveUseless = TRUE) JMP_THIS(0x4BC490);
+
     void GetBuildingRenderData(int bldTypeID, CBuildingRenderData* pRet) { JMP_THIS(0x4C3C20); }
     CTubeData* GetTubeData(int tubeID) { JMP_THIS(0x4753C0); }
     void AddTube(CTubeData* pTubeData) { JMP_THIS(0x4BAF20); }
+    void PushBack(CString vector, int member) { JMP_THIS(0x4CBC10); }
 
     ppmfc::CString* FindAvailableOwner(ppmfc::CString* buffer, int nUnknown, bool bUseCountries) { JMP_THIS(0x49B2D0); }
     inline ppmfc::CString FindAvailableOwner(int nUnknown, bool bUseCountries)
@@ -372,6 +472,38 @@ public:
         }
     }
     inline CellData* TryGetCellAt(int X,int Y){ return this->TryGetCellAt(this->GetCoordIndex(X, Y)); }
+
+
+    static inline CellData CopyCellData(CellData cd)
+    {
+        CellData result;
+        result.Unit = cd.Unit;
+        result.Infantry[0] = cd.Infantry[0];
+        result.Infantry[1] = cd.Infantry[1];
+        result.Infantry[2] = cd.Infantry[2];
+        result.Aircraft = cd.Aircraft;
+        result.Structure = cd.Structure;
+        result.TypeListIndex = cd.TypeListIndex;
+        result.Terrain = cd.Terrain;
+        result.TerrainType = cd.TerrainType;
+        result.Smudge = cd.Smudge;
+        result.SmudgeType = cd.SmudgeType;
+        result.Waypoint = cd.Waypoint;
+        result.BaseNode = cd.BaseNode;
+        result.Overlay = cd.Overlay;
+        result.OverlayData = cd.OverlayData;
+        result.TileIndex = cd.TileIndex;
+        result.TileIndexHiPart = cd.TileIndexHiPart;
+        result.TileSubIndex = cd.TileSubIndex;
+        result.Height = cd.Height;
+        result.IceGrowth = cd.IceGrowth;
+        result.CellTag = cd.CellTag;
+        result.Tube = cd.Tube;
+        result.StatusFlag = cd.StatusFlag;
+        result.Flag = cd.Flag;
+        return result;
+    }
+
 
     ppmfc::CString StringBuffer;
     BOOL Initialized; // Maybe? It's data related, if this is false, UnitData, StructureData and so on will be called for loading?

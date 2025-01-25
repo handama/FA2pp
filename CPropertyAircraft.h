@@ -22,6 +22,8 @@ public:
 
 	CPropertyAircraft(ppmfc::CWnd* pParent) { JMP_THIS(0x401000); }
 
+	void Translate() { JMP_THIS(0x401660); }
+
 private:
 	CPropertyAircraft(noinit_t) {}
 };

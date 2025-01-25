@@ -20,4 +20,7 @@ public:
 
 	virtual void DoDataExchange(ppmfc::CDataExchange* pDX) override
 		{ JMP_THIS(0x40A440); }
+
+	void OnClickImportINI() 
+		{ JMP_THIS(0x40B740); }
 };
