@@ -183,18 +183,37 @@ public:
 	}
 	void* ReadWholeFile(const char* filename, DWORD* pDwSize = nullptr, bool fa2path = false);
 	bool HasFile(ppmfc::CString filename, int nMix = -114);
-	void SetTheaterLetter(ppmfc::CString& string)
+	// mode 0 = vanilla YR, mode 1 = Ares
+	void SetTheaterLetter(ppmfc::CString& string, int mode = 1)
 	{
+		if (string.GetLength() < 2)
+			return;
+
 		if (this->TheaterIdentifier != 0)
 		{
-			// Ares code here
-			char c0 = string[0];
-			char c1 = string[1] & ~0x20; // evil hack to uppercase
-			if (isalpha(static_cast<unsigned char>(c0))) {
-				if (c1 == 'A' || c1 == 'T') {
-					string.SetAt(1, this->TheaterIdentifier);
+			if (mode == 1)
+			{
+				// Ares code here
+				char c0 = string[0];
+				char c1 = string[1] & ~0x20; // evil hack to uppercase
+				if (isalpha(static_cast<unsigned char>(c0))) {
+					if (c1 == 'A' || c1 == 'T') {
+						string.SetAt(1, this->TheaterIdentifier);
+					}
 				}
 			}
+			else
+			{
+				// vanilla YR logic
+				char c0 = string[0] & ~0x20;
+				char c1 = string[1] & ~0x20;
+				if (c0 == 'G' || c0 == 'N' || c0 == 'C'|| c0 == 'Y') {
+					if (c1 == 'A' || c1 == 'T') {
+						string.SetAt(1, this->TheaterIdentifier);
+					}
+				}
+			}
+
 			/* WW code here
 			char f = string[0], s = string[1];
 			if (f >= 'A' && f <= 'Z')	f += ' ';
@@ -206,6 +225,9 @@ public:
 	}
 	void SetGenericTheaterLetter(ppmfc::CString& string)
 	{
+		if (string.GetLength() < 2)
+			return;
+
 		string.SetAt(1, 'G');
 	}
 
