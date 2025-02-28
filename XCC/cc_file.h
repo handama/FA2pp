@@ -24,6 +24,18 @@ public:
     int open(unsigned int id, Cmix_file& mix_f) JMP_THIS(0x529900);
     int open(const xcc_string& name, Cmix_file& mix_f) JMP_THIS(0x5299C0);
     int open(const xcc_string& name);
+    int open(byte* pData, int size)
+    {
+        if (pData)
+        {
+            m_data = pData;
+            m_size = size;
+            m_is_open = true;
+            return 1;
+        }
+        m_is_open = false;
+        return 0;
+    }
     void load(const byte* data, int size);
     void load(const Ccc_file& f);
     t_file_type get_file_type(bool fast = true);
@@ -77,7 +89,6 @@ protected:
     bool m_data_loaded;
 private:
     void clean_up();
-
     bool m_attached;
     byte* m_data;
     DECLARE_PROPERTY(Cfile32, m_f);

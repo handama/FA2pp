@@ -1,6 +1,7 @@
 #pragma once
 
 #include "FA2PP.h"
+#include "XCC/cc_file.h"
 
 // Forward Definations
 class CINI;
@@ -47,6 +48,7 @@ public:
 	static constexpr reference<CLoading*, 0x7EE030> const Instance{};
 
 	static constexpr reference<bool, 0x5D32AC> const HasMdFile{};
+	static constexpr reference<Ccc_file, 0x8204F0> CurrentTMP{};
 
 	CLoading(CWnd* pParentWnd) { JMP_THIS(0x479A40) }
 	~CLoading() { JMP_THIS(0x48A330); }
