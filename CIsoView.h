@@ -136,7 +136,7 @@ public:
     // 0 infantry, 1 structure, 2 aircraft, 3 unit
     void HandleProperties(int index, int type) { JMP_THIS(0x45EDC0); }
 
-    
+    static void __cdecl SetColorKey(IDirectDrawSurface7* pDDS, COLORREF rgb) { JMP_STD(0x447400); }
 
     MapCoord StartCell; // which cell the left button clicked on
     int FlattenHeight;
