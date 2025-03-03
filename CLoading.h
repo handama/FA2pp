@@ -73,6 +73,8 @@ public:
 	void InitializeDDraw() { JMP_THIS(0x490EF0); }
 	void PrimarySurfaceLost() { JMP_THIS(0x4691D0); }
 	void Release() { JMP_THIS(0x491D00); }
+	BOOL LoadObjects(const char* RegName) { JMP_THIS(0x4808A0); }
+
 	int GetPaletteISO()
 	{
 		switch (this->TheaterIdentifier)
