@@ -128,43 +128,6 @@ public:
     } Flag;
 };
 
-
-struct CellDataExt
-{
-    int X;
-    int Y;
-
-    // for preview
-    bool AroundPlayerLocation = false;
-    bool AroundHighBridge = false;
-
-    // for locate cell
-    bool drawCell = false;
-
-    // for copy paste
-    CBuildingData BuildingData;
-    CAircraftData AircraftData;
-    CInfantryData InfantryData[3];
-    CUnitData UnitData;
-    ppmfc::CString TerrainData;
-    ppmfc::CString SmudgeData;
-
-    // for smooth water
-    bool IsWater;
-    bool Processed;
-
-    // for raise ground
-    bool Adjusted;
-    bool CreateSlope;
-
-    // for create shore
-    bool ShoreProcessed;
-    bool ShoreLATNeeded;
-
-    //for terrain generation
-    bool AddRandomTile;
-};
-
 #pragma pack(push, 1)
 struct IsoMapPack4Entry
 {
