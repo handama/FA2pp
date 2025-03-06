@@ -122,8 +122,8 @@ public:
     {
         char NotAValidCell : 1;
         char IsHiddenCell : 1;
-        char IgnoreAltImages : 1;
-        char : 1;
+        char RedrawTerrain : 1;
+        char CliffHack : 1;
         char AltIndex : 4;
     } Flag;
 };
