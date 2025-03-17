@@ -213,9 +213,27 @@ public:
     bool Flag : 1;
 };
 
+class CBaseNodeData
+{
+public:
+    CBaseNodeData& operator=(const CBaseNodeData& another)
+    {
+        TypeID = another.TypeID;
+        Y = another.Y;
+        X = another.X;
+        House = another.House;
+        return *this;
+    };
+    ppmfc::CString House;
+    ppmfc::CString TypeID;
+    ppmfc::CString X;
+    ppmfc::CString Y;
+};
+
 static_assert(sizeof(CInfantryData) == 0x3C);
 static_assert(sizeof(CBuildingData) == 0x48);
 static_assert(sizeof(CUnitData) == 0x3C);
 static_assert(sizeof(CAircraftData) == 0x34);
 static_assert(sizeof(CTerrainData) == 0x10);
 static_assert(sizeof(CSmudgeData) == 0x10);
+static_assert(sizeof(CBaseNodeData) == 0x10);

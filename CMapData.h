@@ -386,6 +386,8 @@ public:
     void SetSmudgeData(CSmudgeData* pData) { JMP_THIS(0x4C9CF0); }
     void DeleteSmudgeData(int index) { JMP_THIS(0x4C9F40); }
 
+    void SetBaseNodeData(CBaseNodeData* pData, WORD nCoord = -1) { JMP_THIS(0x4AB820); }
+    void DeleteBaseNodeData(const char* lpHouse, int index) { JMP_THIS(0x4AA130); }
     
     void AddTiberium(unsigned char overlay, unsigned char overlaydata) { JMP_THIS(0x4A1DB0); }
     void DeleteTiberium(unsigned char overlay, unsigned char overlaydata) { JMP_THIS(0x4A17C0); }
