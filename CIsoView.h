@@ -44,7 +44,7 @@ public:
     static constexpr reference<ppmfc::CRuntimeClass, 0x5942B8> RuntimeClass{};
     static constexpr reference<bool, 0x5E7C0C> const RButtonDownOrFocusKilled{};
     static constexpr reference<bool, 0x5E7C10> const Destoryed{};
-    static constexpr reference<bool, 0x5E7C14> const ScrollingRelatedFlag{};
+    static constexpr reference<bool, 0x5E7C14> const IsMouseMoving{};
 
     static CIsoView* GetInstance()
     {
