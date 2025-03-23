@@ -53,6 +53,17 @@ MapCoord& operator+=(MapCoord& l, const MapCoord& r);
 MapCoord operator+(const MapCoord& l, const MapCoord& r);
 MapCoord operator*(const MapCoord& coord, int factor);
 
+namespace std {
+    template<>
+    struct hash<MapCoord> {
+        size_t operator()(const MapCoord& coord) const {
+            size_t h1 = hash<int>()(coord.X);
+            size_t h2 = hash<int>()(coord.Y);
+            return h1 ^ (h2 << 1);
+        }
+    };
+}
+
 struct MapRect
 {
     int Left;
