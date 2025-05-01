@@ -399,9 +399,7 @@ public:
 
 	ppmfc::CString GetString(ppmfc::CString pSection, ppmfc::CString pKey, ppmfc::CString pDefault = "") {
 		if (auto const pStr = TryGetString(pSection, pKey)) {
-			ppmfc::CString ret = *pStr;
-			ret.Trim();
-			return ret;
+			return *pStr;
 		}
 			
 		else
@@ -410,9 +408,7 @@ public:
 
 	ppmfc::CString GetString(INISection* pSection, ppmfc::CString pKey, ppmfc::CString pDefault = "") {
 		if (auto const pStr = TryGetString(pSection, pKey)) {
-			ppmfc::CString ret = *pStr;
-			ret.Trim();
-			return ret;
+			return *pStr;
 		}
 		else
 			return pDefault;
