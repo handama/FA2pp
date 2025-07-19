@@ -8,6 +8,7 @@
 #include "CFinalSunApp.h"
 
 #include <fstream>
+#include "../FA2sp/Ext/CLoading/Body.h"
 
 const MapCoord MapCoord::Facings[FACING_COUNT] =
 {
@@ -140,6 +141,18 @@ void* CLoading::ReadWholeFile(const char* filename, DWORD* pDwSize, bool fa2path
 		fin.close();
 		return pBuffer;
 	}
+
+	size_t size = 0;
+	auto data = ResourcePackManager::instance().getFileData(filename, &size);
+	if (data && size > 0)
+	{
+		auto pBuffer = GameCreateArray<unsigned char>(size);
+		memcpy(pBuffer, data.get(), size);
+		if (pDwSize)
+			*pDwSize = (DWORD)size;
+		return pBuffer;
+	}
+
 	auto nMix = CLoading::Instance->SearchFile(filename);
 	if (CMixFile::HasFile(filename, nMix))
 	{
@@ -165,6 +178,12 @@ bool CLoading::HasFile(ppmfc::CString filename, int nMix)
 	if (fin.is_open())
 	{
 		fin.close();
+		return true;
+	}
+	size_t size = 0;
+	auto data = ResourcePackManager::instance().getFileData(filename.m_pchData, &size);
+	if (data && size > 0)
+	{
 		return true;
 	}
 	if (nMix == -114)
