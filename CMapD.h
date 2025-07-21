@@ -12,4 +12,9 @@ public:
 	ppmfc::CComboBox	CCBTheater; // 152
 	ppmfc::CString			CString_Width; // 212
 	ppmfc::CString			CString_Height; // 216
+
+	void Update()
+	{
+		JMP_THIS(0x4993B0);
+	}
 };
