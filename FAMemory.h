@@ -131,6 +131,20 @@ static inline void GameDelete(T* ptr) {
 }
 
 template <typename T>
+struct GameUniqueDeleter {
+	void operator()(T* ptr) const {
+		if (ptr) {
+			GameDelete(ptr);
+		}
+	}
+};
+
+template <typename T, typename... TArgs>
+std::unique_ptr<T, GameUniqueDeleter<T>> MakeGameUnique(TArgs&&... args) {
+	return std::unique_ptr<T, GameUniqueDeleter<T>>(GameCreate<T>(std::forward<TArgs>(args)...));
+}
+
+template <typename T>
 static inline T* GameCreateVector(size_t capacity) {
 	auto ptr = &reinterpret_cast<size_t*>(FAMemory::AllocateChecked(capacity * sizeof(T) + 4))[1];
 	ptr[-1] = capacity;
