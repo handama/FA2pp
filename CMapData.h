@@ -406,11 +406,6 @@ public:
 
     void SetOverlayAt(int dwPos, unsigned char overlay) { JMP_THIS(0x4A16C0); }
     void SetOverlayDataAt(int dwPos, unsigned char overlaydata) { JMP_THIS(0x4A2A10); }
-    unsigned char GetOverlayAt(int dwPos)
-    {
-        if (dwPos > CellDataCount) return 0;
-        return CellDatas[dwPos].Overlay;
-    }
     unsigned char GetOverlayDataAt(int dwPos)
     {
         if (dwPos > CellDataCount) return 0;
@@ -419,6 +414,7 @@ public:
 
     void SaveUndoRedoData(bool flag, int L, int T, int R, int B) { JMP_THIS(0x4BB990); }
     void DoUndo() JMP_THIS(0x4BBEC0);
+    void DoRedo() JMP_THIS(0x4BC1C0);
 
     void CreateShore(int left, int top, int right, int bottom, bool bRemoveUseless = TRUE) JMP_THIS(0x4BC490);
 
