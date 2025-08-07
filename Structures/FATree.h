@@ -868,7 +868,7 @@
         FATreeNode* _Buynode(FATreeNode* _Parg, FATreeNodeColor _Carg)
         {
             FATreeNode* _S =
-                (FATreeNode*)_Allocator.allocate(sizeof FATreeNode);
+                (FATreeNode*)_Allocator.allocate(sizeof(FATreeNode));
             _Parent(_S) = _Parg;
             _Color(_S) = _Carg;
             return (_S);
