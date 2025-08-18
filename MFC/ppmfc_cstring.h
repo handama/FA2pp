@@ -78,6 +78,10 @@ public:
     int Find(LPCTSTR lpszSub) const
         _PPMFC_THISCALL(0x54F967);
 
+    int Find(std::string& text) const {
+        return Find(text.c_str());
+    }
+
     int Find(LPCTSTR lpszSub, int from) const
         _PPMFC_THISCALL(0x54F975);
 
@@ -123,6 +127,10 @@ public:
     const CString& operator=(LPCSTR lpsz)
         _PPMFC_THISCALL(0x556098);
 
+    const CString& operator=(const std::string& text) {
+        return (*this = text.c_str());
+    }
+
     const CString& operator=(LPCWSTR lpsz)
         _PPMFC_THISCALL(0x5560BF);
 
@@ -136,6 +144,10 @@ public:
     friend CString _PPMFC_API operator+(const CString& string, LPCTSTR lpsz)
         _PPMFC_STDCALL(0x5561A4);
 
+    friend CString operator+(const CString& string, const std::string& text) {
+        return operator+(string, text.c_str()); 
+    }
+
     friend CString _PPMFC_API operator+(LPCTSTR lpsz, const CString& string)
         _PPMFC_STDCALL(0x556218);
 
@@ -144,6 +156,10 @@ public:
 
     const CString& operator+=(LPCTSTR lpsz)
         _PPMFC_THISCALL(0x5562EB);
+
+    const CString& operator+=(const std::string& text) {
+        return (*this += text.c_str());
+    }
 
     const CString& operator+=(TCHAR ch)
         _PPMFC_THISCALL(0x556312);
