@@ -298,6 +298,15 @@ private:
         else if constexpr (std::is_same_v<U, CString>) {
             vec.push_back(arg.m_pchData);
         }
+        else if constexpr (std::is_same_v<U, ppmfc::CString>) {
+            vec.push_back(arg.m_pchData);
+        }
+        else if constexpr (std::is_same_v<U, std::string>) {
+            vec.push_back(arg.c_str());
+        }
+        else if constexpr (std::is_same_v<U, std::wstring>) {
+            vec.push_back(arg.c_str());
+        }
         else if constexpr (std::is_same_v<U, const char*>) {
             vec.push_back(arg);
         }
@@ -319,10 +328,16 @@ private:
         else if constexpr (std::is_same_v<U, word>) {
             vec.push_back(static_cast<int>(arg));
         }
+        else if constexpr (std::is_same_v<U, dword>) {
+            vec.push_back(static_cast<int>(arg));
+        }
         else if constexpr (std::is_same_v<U, char>) {
             vec.push_back(static_cast<int>(arg));
         }
         else if constexpr (std::is_same_v<U, byte>) {
+            vec.push_back(static_cast<int>(arg));
+        }
+        else if constexpr (std::is_same_v<U, bool>) {
             vec.push_back(static_cast<int>(arg));
         }
         else if constexpr (std::is_same_v<U, double>) {
@@ -436,8 +451,9 @@ private:
             case 'C' | FORCE_UNICODE:
             {
                 wchar_t value = static_cast<wchar_t>(std::get<int>(args[argIndex++]));
+                wint_t wvalue = static_cast<wint_t>(value);
                 char buf[16];
-                snprintf(buf, sizeof(buf), "%lc", value);
+                snprintf(buf, sizeof(buf), "%lc", wvalue);
                 result += buf;
                 break;
             }
@@ -456,16 +472,23 @@ private:
             case 'S' | FORCE_UNICODE:
             {
                 const wchar_t* str = std::get<const wchar_t*>(args[argIndex++]);
-                char buf[1024];
                 if (str) {
-                    std::wstring ws(str);
-                    std::string s(ws.begin(), ws.end());
-                    snprintf(buf, sizeof(buf), formatSpec.c_str(), s.c_str());
+                    int ansiSize = WideCharToMultiByte(CP_ACP, 0, str, -1, nullptr, 0, nullptr, nullptr);
+                    if (ansiSize == 0) {
+                        result += "(null)";
+                        break;
+                    }
+                    std::vector<char> ansiStr(ansiSize);
+                    WideCharToMultiByte(CP_ACP, 0, str, -1, ansiStr.data(), ansiSize, nullptr, nullptr);
+                    char buf[1024];
+                    snprintf(buf, sizeof(buf), "%s", ansiStr.data());
+                    result += buf;
                 }
                 else {
-                    snprintf(buf, sizeof(buf), formatSpec.c_str(), "(null)");
+                    char buf[1024];
+                    snprintf(buf, sizeof(buf), "%s", "(null)");
+                    result += buf;
                 }
-                result += buf;
                 break;
             }
             case 'd':
