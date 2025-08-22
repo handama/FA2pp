@@ -43,6 +43,9 @@ struct needs_vector_delete : std::integral_constant<bool,
 template <typename T>
 struct GameAllocator {
 	using value_type = T;
+	using size_type = size_t;
+	using difference_type = ptrdiff_t;
+	using propagate_on_container_move_assignment = std::true_type;
 
 	GameAllocator() {}
 

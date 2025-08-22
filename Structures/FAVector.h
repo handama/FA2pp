@@ -10,7 +10,7 @@
 #endif  /* _MSC_VER */
 
 // TEMPLATE CLASS vector
-template<class _Ty, class _A = std::allocator<_Ty> >
+template<class _Ty, class _A = GameAllocator<_Ty>>
 class FAVector {
 public:
 	using _Myt = typename FAVector<_Ty, _A>;
@@ -19,44 +19,42 @@ public:
 	using size_type = typename _A::size_type;
 	using difference_type = typename _A::difference_type;
 	using value_type = typename _A::value_type;
-
 	using _Tptr = value_type*;
 	using _Ctptr = const value_type*;
 	using reference = value_type&;
 	using const_reference = const value_type&;
-	
 	using iterator = _Tptr;
 	using const_iterator = _Ctptr;
 
 	explicit FAVector(const _A& _Al = _A())
 		: allocator(_Al), _First(0), _Last(0), _End(0) {}
-	explicit FAVector(size_type _N, const _Ty& _V = _Ty(),
-		const _A& _Al = _A())
-		: allocator(_Al)
-	{
+
+	explicit FAVector(size_type _N, const _Ty& _V = _Ty(), const _A& _Al = _A())
+		: allocator(_Al) {
 		_First = allocator.allocate(_N, (void*)0);
 		_Ufill(_First, _N, _V);
 		_Last = _First + _N;
 		_End = _Last;
 	}
+
 	FAVector(const _Myt& _X)
-		: allocator(_X.allocator)
-	{
+		: allocator(_X.allocator) {
 		_First = allocator.allocate(_X.size());
 		_Last = _Ucopy(_X.begin(), _X.end(), _First);
 		_End = _Last;
 	}
+
 	typedef const_iterator _It;
 	FAVector(_It _F, _It _L, const _A& _Al = _A())
-		: allocator(_Al), _First(0), _Last(0), _End(0)
-	{
+		: allocator(_Al), _First(0), _Last(0), _End(0) {
 		insert(begin(), _F, _L);
 	}
-	~FAVector()
-	{
+
+	~FAVector() {
 		_Destroy(_First, _Last);
-		allocator.deallocate(_First, _End - _First);
-		_First = 0, _Last = 0, _End = 0;
+		if (_First)
+			allocator.deallocate(_First, _End - _First);
+		_First = _Last = _End = 0;
 	}
 	_Myt& operator=(const _Myt& _X)
 	{
@@ -326,27 +324,26 @@ public:
 		_X.swap(_Y);
 	}
 protected:
-	void _Destroy(iterator _F, iterator _L)
-	{
+	void _Destroy(iterator _F, iterator _L) {
 		for (; _F != _L; ++_F)
 			traits_type::destroy(allocator, _F);
 	}
-	iterator _Ucopy(const_iterator _F, const_iterator _L,
-		iterator _P)
-	{
+
+	iterator _Ucopy(const_iterator _F, const_iterator _L, iterator _P) {
 		for (; _F != _L; ++_P, ++_F)
 			traits_type::construct(allocator, _P, *_F);
 		return (_P);
 	}
-	void _Ufill(iterator _F, size_type _N, const _Ty& _X)
-	{
+
+	void _Ufill(iterator _F, size_type _N, const _Ty& _X) {
 		for (; 0 < _N; --_N, ++_F)
 			traits_type::construct(allocator, _F, _X);
 	}
-	void _Xran() const
-	{
-		_THROW("out_of_range - invalid FAVector<T> subscript");
+
+	void _Xran() const {
+		throw std::out_of_range("out_of_range - invalid FAVector<T> subscript");
 	}
+
 	_A allocator;
 	iterator _First, _Last, _End;
 };
