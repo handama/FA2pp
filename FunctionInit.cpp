@@ -153,7 +153,7 @@ void* CLoading::ReadWholeFile(const char* filename, DWORD* pDwSize, bool fa2path
 		return pBuffer;
 	}
 
-	auto& manager = MixManager::Instance();
+	auto& manager = MixLoader::Instance();
 	size_t sizeM = 0;
 	auto result = manager.LoadFile(filename, &sizeM);
 	if (result && sizeM > 0)
@@ -200,7 +200,7 @@ bool CLoading::HasFile(ppmfc::CString filename, int nMix)
 		return true;
 	}
 
-	auto& manager = MixManager::Instance();
+	auto& manager = MixLoader::Instance();
 	int result = manager.QueryFileIndex(filename.m_pchData, nMix);
 	if (result >= 0)
 		return true;
