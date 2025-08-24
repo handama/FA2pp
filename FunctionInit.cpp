@@ -9,6 +9,7 @@
 
 #include <fstream>
 #include "../FA2sp/Ext/CLoading/Body.h"
+#include "../FA2sp/FA2sp.h"
 
 const MapCoord MapCoord::Facings[FACING_COUNT] =
 {
@@ -121,7 +122,7 @@ RGBClass::operator HSVClass() const
 
 void* CLoading::ReadWholeFile(const char* filename, DWORD* pDwSize, bool fa2path)
 {
-	ppmfc::CString filepath = CFinalSunApp::FilePath();
+	FString filepath = CFinalSunApp::FilePath();
 	if (fa2path) filepath = CFinalSunApp::ExePath();
 	filepath += filename;
 	std::ifstream fin;
@@ -153,16 +154,19 @@ void* CLoading::ReadWholeFile(const char* filename, DWORD* pDwSize, bool fa2path
 		return pBuffer;
 	}
 
-	auto& manager = MixLoader::Instance();
-	size_t sizeM = 0;
-	auto result = manager.LoadFile(filename, &sizeM);
-	if (result && sizeM > 0)
+	if (ExtConfigs::ExtMixLoader)
 	{
-		auto pBuffer = GameCreateArray<unsigned char>(sizeM);
-		memcpy(pBuffer, result.get(), sizeM);
-		if (pDwSize)
-			*pDwSize = (DWORD)sizeM;
-		return pBuffer;
+		auto& manager = MixLoader::Instance();
+		size_t sizeM = 0;
+		auto result = manager.LoadFile(filename, &sizeM);
+		if (result && sizeM > 0)
+		{
+			auto pBuffer = GameCreateArray<unsigned char>(sizeM);
+			memcpy(pBuffer, result.get(), sizeM);
+			if (pDwSize)
+				*pDwSize = (DWORD)sizeM;
+			return pBuffer;
+		}
 	}
 
 	auto nMix = CLoading::Instance->SearchFile(filename);
@@ -200,10 +204,13 @@ bool CLoading::HasFile(ppmfc::CString filename, int nMix)
 		return true;
 	}
 
-	auto& manager = MixLoader::Instance();
-	int result = manager.QueryFileIndex(filename.m_pchData, nMix);
-	if (result >= 0)
-		return true;
+	if (ExtConfigs::ExtMixLoader)
+	{
+		auto& manager = MixLoader::Instance();
+		int result = manager.QueryFileIndex(filename.m_pchData, nMix);
+		if (result >= 0)
+			return true;
+	}
 
 	if (nMix == -114)
 	{
