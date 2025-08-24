@@ -153,6 +153,18 @@ void* CLoading::ReadWholeFile(const char* filename, DWORD* pDwSize, bool fa2path
 		return pBuffer;
 	}
 
+	auto& manager = MixManager::Instance();
+	size_t sizeM = 0;
+	auto result = manager.LoadFile(filename, &sizeM);
+	if (result && sizeM > 0)
+	{
+		auto pBuffer = GameCreateArray<unsigned char>(sizeM);
+		memcpy(pBuffer, result.get(), sizeM);
+		if (pDwSize)
+			*pDwSize = (DWORD)sizeM;
+		return pBuffer;
+	}
+
 	auto nMix = CLoading::Instance->SearchFile(filename);
 	if (CMixFile::HasFile(filename, nMix))
 	{
@@ -180,12 +192,19 @@ bool CLoading::HasFile(ppmfc::CString filename, int nMix)
 		fin.close();
 		return true;
 	}
+
 	size_t size = 0;
 	auto data = ResourcePackManager::instance().getFileData(filename.m_pchData, &size);
 	if (data && size > 0)
 	{
 		return true;
 	}
+
+	auto& manager = MixManager::Instance();
+	int result = manager.QueryFileIndex(filename.m_pchData, nMix);
+	if (result >= 0)
+		return true;
+
 	if (nMix == -114)
 	{
 		nMix = CLoading::Instance->SearchFile(filename);
