@@ -46,6 +46,15 @@ public:
 		JMP_THIS(0x40A010);
 	}
 };
+struct FAINIIndicesMap
+{
+public:
+	std::pair<INIIndiceDict::iterator, bool>*
+		insert(std::pair<INIIndiceDict::iterator, bool>* ret, std::pair<ppmfc::CString, int>* pair)
+	{
+		JMP_THIS(0x455010);
+	}
+};
 
 struct FAINICStringMap : private INIStringDict
 {
@@ -76,6 +85,7 @@ public:
 		{ return *reinterpret_cast<INIIndiceDict*>(&this->IndicesDictionary); }
 
 	ppmfc::CString* TryGetString(ppmfc::CString pKey) {
+		if (pKey.IsEmpty()) return nullptr;
 		auto pEntries = &this->GetEntities();
 		auto itrKey = pEntries->find(pKey);
 		if (itrKey != pEntries->end())
@@ -86,7 +96,6 @@ public:
 	ppmfc::CString GetString(ppmfc::CString pKey, ppmfc::CString pDefault = "") {
 		if (auto const pStr = TryGetString(pKey)) {
 			ppmfc::CString ret = *pStr;
-			ret.Trim();
 			return ret;
 		}
 		else
@@ -165,7 +174,7 @@ public:
 	// 0 for success
 	// 1 for path not available
 	// 2 for fail to read file
-	int ParseINI(const char* lpPath, bool bTrimSpace, int nUnused = 0) { JMP_THIS(0x452CC0); }
+	int ParseINI(const char* lpPath, const char*  lpSection, int bTrimSpace = 0) { JMP_THIS(0x452CC0); }
 
 	std::pair<INIDict::iterator, bool> InsertSection(ppmfc::CString pSection, INISection* section)
 	{
@@ -377,6 +386,7 @@ public:
 	}
 
 	ppmfc::CString* TryGetString(ppmfc::CString pSection, ppmfc::CString pKey) {
+		if (pKey.IsEmpty()) return nullptr;
 		auto itrSection = Dict.find(pSection);
 		if (itrSection != Dict.end()) {
 			auto pEntries = &itrSection->second.GetEntities();
@@ -388,7 +398,7 @@ public:
 	}
 
 	ppmfc::CString* TryGetString(INISection* pSection, ppmfc::CString pKey) {
-		
+		if (pKey.IsEmpty()) return nullptr;
 		auto pEntries = &pSection->GetEntities();
 		auto itrKey = pEntries->find(pKey);
 		if (itrKey != pEntries->end())
