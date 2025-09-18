@@ -15,4 +15,5 @@ public:
     static bool __cdecl HasFile(const char* pName, int nMix) { JMP_STD(0x525670); }
     static bool __cdecl ExtractFile(const char* pName, const char* pPath, int nMix) { JMP_STD(0x5257D0) }
     static bool __cdecl LoadSHP(const char* pName, int nMix) { JMP_STD(0x525C50); }
+    static bool __cdecl SaveMix(const char* pName, const char** pFiles, int nFileCount) { JMP_STD(0x527750); }
 };
