@@ -7,8 +7,11 @@ class NOVTABLE CUpdateProgress : public ppmfc::CDialog
 public:
 	CUpdateProgress() = default;
 
+	CUpdateProgress(ppmfc::CString lpDescription, ppmfc::CWnd* pParent)
+		{ JMP_THIS(0x4D3A80); }
+
 	//member properties
-	int Unknown_92;
+	BOOL m_bCancel;
 	CProgressCtrl ProgressBar;
 	ppmfc::CString CString_Title;
 	ppmfc::CString CString_Buffer;
