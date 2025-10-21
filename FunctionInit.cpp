@@ -178,6 +178,7 @@ void* CLoading::ReadWholeFile(const char* filename, DWORD* pDwSize, bool fa2path
 		memcpy(pBuffer, file.get_data(), file.get_size());
 		if (pDwSize)
 			*pDwSize = file.get_size();
+		file.close();
 
 		return pBuffer;
 	}
