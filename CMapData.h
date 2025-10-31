@@ -389,7 +389,6 @@ public:
     void DeleteAircraftData(int aircraftID) { JMP_THIS(0x4A98B0); }
     void GetAircraftData(int aircraftID, CAircraftData& data) { JMP_THIS(0x4AF430); }
 
-
     void GetTerrainData(int terrainID, ppmfc::CString lpType) { JMP_THIS(0x4B1740); }
     void DeleteTerrainData(int index) { JMP_THIS(0x4AA0C0); }
     void SetTerrainData(LPCTSTR lpType, int nCoord, int suggestedIndex = -1) { JMP_THIS(0x4B17A0); }
@@ -403,6 +402,8 @@ public:
     void AddTiberium(unsigned char overlay, unsigned char overlaydata) { JMP_THIS(0x4A1DB0); }
     void DeleteTiberium(unsigned char overlay, unsigned char overlaydata) { JMP_THIS(0x4A17C0); }
     void SmoothTiberium(int dwPos) { JMP_THIS(0x4C4480); }
+
+    void SetWaypointData(ppmfc::CString lpID, int dwPos) { JMP_THIS(0x4AAA70); }
 
     void SetOverlayAt(int dwPos, unsigned char overlay) { JMP_THIS(0x4A16C0); }
     void SetOverlayDataAt(int dwPos, unsigned char overlaydata) { JMP_THIS(0x4A2A10); }
