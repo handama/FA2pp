@@ -122,17 +122,35 @@ RGBClass::operator HSVClass() const
 
 void* CLoading::ReadWholeFile(const char* filename, DWORD* pDwSize, bool fa2path)
 {
-	FString filepath = CFinalSunApp::FilePath();
-	if (fa2path) filepath = CFinalSunApp::ExePath();
-	filepath += filename;
+	FString filepath;
 	std::ifstream fin;
-	fin.open(filepath, std::ios::in | std::ios::binary);
-	if (fin.is_open())
+	if (fa2path)
+	{
+		filepath = CFinalSunApp::ExePath();
+		filepath += filename;
+		fin.open(filepath, std::ios::in | std::ios::binary);
+	}
+	else
+	{
+		filepath = CFinalSunApp::ExePath();
+		filepath += "Resources\\HighPriority\\";
+		filepath += filename;
+		fin.open(filepath, std::ios::in | std::ios::binary);
+		if (!fin.is_open())
+		{
+			filepath = CFinalSunApp::FilePath();
+			filepath += filename;
+			fin.open(filepath, std::ios::in | std::ios::binary);
+		}
+	}
+	auto readFile = [&]() -> unsigned char*
 	{
 		fin.seekg(0, std::ios::end);
 		const int size = static_cast<int>(fin.tellg());
-		if (size == 0)
+		if (size == 0) {
+			fin.close();
 			return nullptr;
+		}
 
 		fin.seekg(0, std::ios::beg);
 		auto pBuffer = GameCreateArray<unsigned char>(size);
@@ -141,6 +159,10 @@ void* CLoading::ReadWholeFile(const char* filename, DWORD* pDwSize, bool fa2path
 		fin.read((char*)pBuffer, size);
 		fin.close();
 		return pBuffer;
+	};
+	if (fin.is_open())
+	{
+		return readFile();
 	}
 
 	size_t size = 0;
@@ -183,15 +205,34 @@ void* CLoading::ReadWholeFile(const char* filename, DWORD* pDwSize, bool fa2path
 		return pBuffer;
 	}
 
+	filepath = CFinalSunApp::ExePath();
+	filepath += "Resources\\LowPriority\\";
+	filepath += filename;
+	fin.open(filepath, std::ios::in | std::ios::binary);
+	if (fin.is_open())
+	{
+		return readFile();
+	}
+
 	return nullptr;
 }
 
 bool CLoading::HasFile(ppmfc::CString filename, int nMix)
 {
-	ppmfc::CString filepath = CFinalSunApp::FilePath();
-	filepath += filename;
+	FString filepath;
 	std::ifstream fin;
+
+	filepath = CFinalSunApp::ExePath();
+	filepath += "Resources\\HighPriority\\";
+	filepath += filename;
 	fin.open(filepath, std::ios::in | std::ios::binary);
+	if (!fin.is_open())
+	{
+		filepath = CFinalSunApp::FilePath();
+		filepath += filename;
+		fin.open(filepath, std::ios::in | std::ios::binary);
+	}
+
 	if (fin.is_open())
 	{
 		fin.close();
@@ -216,8 +257,21 @@ bool CLoading::HasFile(ppmfc::CString filename, int nMix)
 	if (nMix == -114)
 	{
 		nMix = CLoading::Instance->SearchFile(filename);
-		return CMixFile::HasFile(filename, nMix);
+		if (CMixFile::HasFile(filename, nMix))
+			return true;
 	}
-	return CMixFile::HasFile(filename, nMix);
+	if (CMixFile::HasFile(filename, nMix))
+		return true;
+
+	filepath = CFinalSunApp::ExePath();
+	filepath += "Resources\\LowPriority\\";
+	filepath += filename;
+	fin.open(filepath, std::ios::in | std::ios::binary);
+	if (fin.is_open())
+	{
+		fin.close();
+		return true;
+	}
+	return false;
 }
 
