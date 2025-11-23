@@ -251,6 +251,8 @@ class NOVTABLE CMapData
 public:
     static constexpr reference<CMapData, 0x72CBF8> const Instance{};
 
+    static constexpr reference<int, 0x72CBEC> const PasteHeight{};
+
     static constexpr reference<bool, 0x5E7C08> const MapNotLoaded{};
 
     static constexpr reference<int, 0x5E7C48> const CliffWaters2{};
@@ -416,6 +418,7 @@ public:
     void SaveUndoRedoData(bool flag, int L, int T, int R, int B) { JMP_THIS(0x4BB990); }
     void DoUndo() JMP_THIS(0x4BBEC0);
     void DoRedo() JMP_THIS(0x4BC1C0);
+    void Paste(int X, int Y, char nBaseHeight) { JMP_THIS(0x4C3850); }
 
     void CreateShore(int left, int top, int right, int bottom, bool bRemoveUseless = TRUE) JMP_THIS(0x4BC490);
 
@@ -445,7 +448,6 @@ public:
         }
     }
     inline CellData* TryGetCellAt(int X,int Y){ return this->TryGetCellAt(this->GetCoordIndex(X, Y)); }
-
 
     static inline CellData CopyCellData(CellData cd)
     {
