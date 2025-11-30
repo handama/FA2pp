@@ -53,6 +53,8 @@ public:
     ppmfc::CString AutoNORecruitType;
     ppmfc::CString AutoYESRecruitType;
     bool Flag : 1;
+
+    ~CInfantryData() = default;
 };
 
 class CBuildingData
@@ -99,6 +101,8 @@ public:
     ppmfc::CString AIRepairable;
     ppmfc::CString Nominal;
     bool Flag : 1;
+
+    ~CBuildingData() = default;
 };
 
 class CUnitData
@@ -139,6 +143,8 @@ public:
     ppmfc::CString AutoNORecruitType;
     ppmfc::CString AutoYESRecruitType;
     bool Flag : 1;
+
+    ~CUnitData() = default;
 };
 
 class CAircraftData
@@ -175,6 +181,8 @@ public:
     ppmfc::CString AutoNORecruitType;
     ppmfc::CString AutoYESRecruitType;
     bool Flag : 1;
+
+    ~CAircraftData() = default;
 };
 
 class CTerrainData
@@ -193,6 +201,8 @@ public:
     int Y;
     int X;
     bool Flag : 1;
+
+    ~CTerrainData() = default;
 };
 
 class CSmudgeData
@@ -211,6 +221,8 @@ public:
     int Y;
     int X;
     bool Flag : 1;
+
+    ~CSmudgeData() = default;
 };
 
 class CBaseNodeData
@@ -228,6 +240,8 @@ public:
     ppmfc::CString TypeID;
     ppmfc::CString X;
     ppmfc::CString Y;
+
+    ~CBaseNodeData() = default;
 };
 
 static_assert(sizeof(CInfantryData) == 0x3C);
