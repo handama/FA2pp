@@ -41,6 +41,7 @@ public:
 	virtual int DoModal() override { JMP_THIS(0x435270); }
 	void UpdateDialogs(BOOL bSkipUpdateSelf, BOOL bSkipUpdateIsoView) { JMP_THIS(0x4261E0); }
 	void SaveMap(LPCSTR lpPath) { JMP_THIS(0x426E50); }
+	void SaveMapAs() { JMP_THIS(0x426690); }
 	void Update() { JMP_THIS(0x432010); }
 	void LoadMap(LPCSTR lpPath) { JMP_THIS(0x4374B0); }
 	void Settings() { JMP_THIS(0x43D0E0); }
