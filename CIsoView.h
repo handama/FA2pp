@@ -45,6 +45,7 @@ public:
     static constexpr reference<bool, 0x5E7C0C> const RButtonDownOrFocusKilled{};
     static constexpr reference<bool, 0x5E7C10> const Destoryed{};
     static constexpr reference<bool, 0x5E7C14> const IsMouseMoving{};
+    static constexpr reference<bool, 0x5E7C04> const CancelDraw{};
 
     static CIsoView* GetInstance()
     {
