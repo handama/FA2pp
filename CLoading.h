@@ -185,8 +185,6 @@ public:
 			return (Palette*)(0x72A8C4);
 		return nullptr;
 	}
-	void* ReadWholeFile(const char* filename, DWORD* pDwSize = nullptr, bool fa2path = false);
-	bool HasFile(ppmfc::CString filename, int nMix = -114);
 	// mode 0 = vanilla YR, mode 1 = Ares
 	void SetTheaterLetter(ppmfc::CString& string, int mode = 1)
 	{
