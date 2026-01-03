@@ -136,6 +136,7 @@ public:
 
     // 0 infantry, 1 structure, 2 aircraft, 3 unit
     void HandleProperties(int index, int type) { JMP_THIS(0x45EDC0); }
+    void HandleTrail(int a1, int a2) { JMP_STD(0x469B20); }
 
     static void __cdecl SetColorKey(IDirectDrawSurface7* pDDS, COLORREF rgb) { JMP_STD(0x447400); }
 
