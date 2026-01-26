@@ -127,6 +127,7 @@ public:
     void UpdateStatusBar(int X, int Y) { JMP_THIS(0x469E70); }
     void DrawMouseAttachedStuff(int X, int Y, LPDIRECTDRAWSURFACE7 lpSurface) { JMP_THIS(0x46BC80); }
     void DrawMouseAttachedStuff(int x, int y) { JMP_THIS(0x46BC80); }
+    void OnMouseMove(UINT nFlags, CPoint point) { JMP_THIS(0x456DA0); }
 
     void AutoConnectOverlayAt(int X, int Y) { JMP_THIS(0x469B20); }
 
