@@ -407,6 +407,9 @@ public:
 
     void SetWaypointData(ppmfc::CString lpID, int dwPos) { JMP_THIS(0x4AAA70); }
 
+    void AddCelltag(LPCTSTR lpTag, DWORD dwPos) { JMP_THIS(0x4AFA90); }
+    void DeleteCelltag(DWORD dwIndex) { JMP_THIS(0x4A8490); }
+
     void SetOverlayAt(int dwPos, unsigned char overlay) { JMP_THIS(0x4A16C0); }
     void SetOverlayDataAt(int dwPos, unsigned char overlaydata) { JMP_THIS(0x4A2A10); }
     unsigned char GetOverlayDataAt(int dwPos)
