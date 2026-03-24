@@ -132,44 +132,6 @@ public:
 			return this->PAL_TEMPERAT;
 		}
 	}
-	ppmfc::CString GetFileExtension()
-	{
-		switch (this->TheaterIdentifier)
-		{
-		case 'A':
-			return ".sno";
-		case 'U':
-			return ".urb";
-		case 'N':
-			return ".ubn";
-		case 'D':
-			return ".des";
-		case 'L':
-			return ".lun";
-		case 'T':
-		default:
-			return ".tem";
-		}
-	}
-	const char* GetTheaterSuffix()
-	{
-		switch (this->TheaterIdentifier)
-		{
-		case 'A':
-			return "SNO";
-		case 'U':
-			return "URB";
-		case 'N':
-			return "UBN";
-		case 'D':
-			return "DES";
-		case 'L':
-			return "LUN";
-		case 'T':
-		default:
-			return "TEM";
-		}
-	}
 	Palette* GetPalette(int id)
 	{
 		if (id == PAL_UNITTEM || id == PAL_UNITSNO || id == PAL_UNITURB || 
