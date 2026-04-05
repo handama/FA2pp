@@ -196,6 +196,10 @@ public:
 
     operator const char*() const
         { return m_pchData; }
+    const char* GetString() const
+        { return m_pchData;}
+
+    explicit operator LPARAM() const { return reinterpret_cast<LPARAM>(GetString()); }
 
     bool operator< (const CString& another) const
         { return strcmp(this->m_pchData, another) < 0; }
@@ -243,14 +247,10 @@ public:
 	bool operator!= (const char* another) const
 		{ return !(*this == another); }
 
-	char& operator[] (const int idx)
-		{ return this->m_pchData[idx]; }
-
 	const char operator[] (const int idx) const
 		{ return this->m_pchData[idx]; }
 
     LPTSTR m_pchData;   // pointer to ref counted string data
-
 
 public:
     // Extra implements not contained in FA2
