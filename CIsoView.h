@@ -89,30 +89,8 @@ public:
         else
             MapCoord2ScreenCoord_Height(X, Y);
     }
-    inline MapCoord GetCurrentMapCoord(const CPoint& point)
-    {
-        RECT rect;
-        this->GetWindowRect(&rect);
-        int x = point.x + rect.left + this->ViewPosition.x;
-        int y = point.y + rect.top + this->ViewPosition.y;
-        ScreenCoord2MapCoord(x, y);
-        return MapCoord{ x,y };
-    }
-
     void MoveToWP(UINT nWaypoint) { JMP_THIS(0x4766A0); }
     void MoveTo(int X, int Y) { JMP_THIS(0x4763D0); }
-    void MoveToMapCoord(int X, int Y)
-    {
-
-        int nMapCoord = CMapData::Instance->GetCoordIndex(X, Y);
-        RECT rect;
-        this->GetWindowRect(&rect);
-        int x = 30 * (CMapData::Instance->MapWidthPlusHeight + X - Y) - (rect.right - rect.left) / 2 - rect.left;
-        int y = 15 * (Y + X) - CMapData::Instance->CellDatas[nMapCoord].Height - (rect.bottom - rect.top) / 2 - rect.top;
-        this->MoveTo(x, y);
-
-        this->RedrawWindow(nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
-    }
 
     void DrawText(int X, int Y, LPCSTR lpString, COLORREF color) { JMP_THIS(0x4685C0); }
     void Draw() { JMP_THIS(0x46DE00); }
