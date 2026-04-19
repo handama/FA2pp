@@ -33,10 +33,11 @@ _PPMFC_CLASS(CString)
 {
 public:
     CString() _PPMFC_THISCALL(0x406F70);
-    CString(LPCTSTR lpch, int nLength) _PPMFC_THISCALL(0x54F598);
-    CString(const CString & stringSrc) _PPMFC_THISCALL(0x555C84);
+    CString(char lpch, int nLength) _PPMFC_THISCALL(0x54F598);
+    CString(const CString& stringSrc) _PPMFC_THISCALL(0x555C84);
     CString(LPCSTR lpsz) _PPMFC_THISCALL(0x555F7D);
     CString(LPCWSTR lpsz) _PPMFC_THISCALL(0x555FCF);
+
     ~CString() _PPMFC_THISCALL(0x555F0F);
 
     CStringData* GetData() const
