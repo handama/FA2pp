@@ -251,6 +251,18 @@ public:
 	const char operator[] (const int idx) const
 		{ return this->m_pchData[idx]; }
 
+    explicit CString(std::string_view sv) : CString()
+    {
+        if (sv.empty())
+            return;
+
+        int nLen = static_cast<int>(sv.length());
+        AllocBuffer(nLen);
+
+        memcpy(m_pchData, sv.data(), nLen);
+        m_pchData[nLen] = '\0';
+    }
+
     LPTSTR m_pchData;   // pointer to ref counted string data
 
 public:
