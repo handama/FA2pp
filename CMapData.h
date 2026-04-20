@@ -442,7 +442,7 @@ public:
     inline CellData* GetCellAt(int X, int Y) { return this->GetCellAt(this->GetCoordIndex(X, Y)); }
     inline CellData* TryGetCellAt(int nIndex) 
     {
-        if (nIndex < this->CellDataCount)
+        if (nIndex >= 0 && nIndex < this->CellDataCount)
             return this->GetCellAt(nIndex);
         else
         {
