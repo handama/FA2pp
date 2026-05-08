@@ -2,6 +2,11 @@
 
 #include "FA2PP.h"
 
+struct ColorStruct
+{
+    unsigned char red, green, blue;
+};
+
 struct BGRStruct 
 { 
     BGRStruct(unsigned char b = 0, unsigned char g = 0, unsigned char r = 0)
@@ -11,16 +16,35 @@ struct BGRStruct
         R = r;
         Zero = 0;
     }
+    BGRStruct(ColorStruct color)
+    {
+        R = color.red;
+        G = color.green;
+        B = color.blue;
+        Zero = 0;
+    }
+    BGRStruct(COLORREF color)
+    {
+        R = GetRValue(color);
+        G = GetGValue(color);
+        B = GetBValue(color);
+        Zero = 0;
+    }
 
     unsigned char B, G, R, Zero;
     bool operator< (const BGRStruct& rhs) const { return *(int*)this < *(int*)&rhs; }
     bool operator==(const BGRStruct& rhs) const { return *(int*)this == *(int*)&rhs; }
 };
 
-struct ColorStruct
+namespace std
 {
-    unsigned char red, green, blue;
-};
+    template<>
+    struct hash<BGRStruct> {
+        size_t operator()(const BGRStruct& s) const noexcept {
+            return std::hash<int>()(*reinterpret_cast<const int*>(&s));
+        }
+    };
+}
 
 class BytePalette
 {

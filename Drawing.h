@@ -124,36 +124,29 @@ class RGBClass
 public:
 	unsigned char R, G, B;
 
+    RGBClass(COLORREF rgb)
+        : R(GetRValue(rgb))
+        , G(GetGValue(rgb))
+        , B(GetBValue(rgb))
+    {
+    }
+    RGBClass() 
+        : R(0)
+        , G(0)
+        , B(0)
+    {
+    }
+    RGBClass(unsigned char r, unsigned char g, unsigned char b)
+        : R(r)
+        , G(g)
+        , B(b)
+    {
+    }
+
 	operator int()
 	{
 		return RGB(R, G, B);
 	}
-
-    operator HSVClass() const;
-};
-
-class RGBClass2
-{
-public:
-    unsigned char R, G, B;
-
-    RGBClass2(int rgb) {
-        B = rgb / (256 * 256);
-        G = (rgb - B * 256 * 256) / 256;
-        R = rgb - B * 256 * 256 - G * 256;
-    }
-    
-    RGBClass2() {
-        B = 0;
-        G = 0;
-        R = 0;
-    }
-
-
-    operator int()
-    {
-        return RGB(R, G, B);
-    }
 
     operator HSVClass() const;
 };
