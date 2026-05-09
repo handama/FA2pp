@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FA2PP.h"
+#include "FA2PPCore.h"
 
 struct ColorStruct
 {
