@@ -87,17 +87,24 @@ public:
 	// construct vectors
 	template <typename T, typename TAlloc, typename... TArgs>
 	static inline T* CreateArray(TAlloc& alloc, size_t capacity, TArgs&&... args) {
-		auto const ptr = std::allocator_traits<TAlloc>::allocate(alloc, capacity);
-		if (capacity && !sizeof...(args) && std::is_scalar<T>::value) {
-			// set to 0
-			std::memset(ptr, 0, capacity * sizeof(T));
+		auto const ptr =
+			std::allocator_traits<TAlloc>::allocate(alloc, capacity);
+
+		if constexpr (sizeof...(args) == 0 && std::is_scalar_v<T>) {
+			// scalar + no constructor args -> zero initialize
+			if (capacity) {
+				std::memset(ptr, 0, capacity * sizeof(T));
+			}
 		}
 		else {
 			for (size_t i = 0; i < capacity; ++i) {
-				// use args... here. can't move args, because we need to reuse them
-				std::allocator_traits<TAlloc>::construct(alloc, &ptr[i], args...);
+				std::allocator_traits<TAlloc>::construct(
+					alloc,
+					&ptr[i],
+					std::forward<TArgs>(args)...);
 			}
 		}
+
 		return ptr;
 	}
 
@@ -203,10 +210,16 @@ static inline void DLLDelete(T* ptr) {
 
 template <typename T, typename... TArgs>
 static inline T* DLLCreateArray(size_t capacity, TArgs&&... args) {
-	static_assert(std::is_constructible<T, TArgs...>::value, "Cannot construct T from TArgs.");
+	static_assert(
+		std::is_constructible_v<T, TArgs...>,
+		"Cannot construct T from TArgs.");
 
 	std::allocator<T> alloc;
-	return Memory::CreateArray<T>(alloc, capacity, std::forward<TArgs>(args));
+
+	return Memory::CreateArray<T>(
+		alloc,
+		capacity,
+		std::forward<TArgs>(args)...);
 }
 
 template<typename T>
