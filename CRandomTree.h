@@ -1,12 +1,17 @@
 #pragma once
 
 #include "FA2PP.h"
+#include <Structures/FAVector.h>
 
 class NOVTABLE CRandomTree : public ppmfc::CDialog
 {
 public:
-	CRandomTree() = default;
+	static constexpr reference<FAVector<ppmfc::CString>, 0x72A860> const RandomTrees{};
 
+	CRandomTree()	
+	{
+		JMP_THIS(0x4D3FC0);
+	}
 	void OnBNToUsedClicked()
 	{
 		JMP_THIS(0x4D48B0);
@@ -36,9 +41,9 @@ public:
 		JMP_THIS(0x4D4FB0);
 	}
 	//member properties
-	CButton		CBNPreviewImage; // 92
-	ppmfc::CListBox	CLBUsed; // 152
-	ppmfc::CListBox	CLBAvailable; // 212
+	char	CBNPreviewImage[60]; // CButton 92
+	char	CLBUsed[60]; // ppmfc::CListBox 152
+	char	CLBAvailable[60]; // ppmfc::CListBox 212
 	ppmfc::CString		CString_Terrain; // 272
 
 	virtual void DoDataExchange(ppmfc::CDataExchange* pDX) override
