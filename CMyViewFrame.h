@@ -10,6 +10,7 @@ class CTileSetBrowserFrame;
 class CViewObjects : public CTreeView
 {
 public:
+    static constexpr reference<ppmfc::CRuntimeClass, 0x598710> RuntimeClass{};
     void Update() { JMP_THIS(0x51CD20); }
 
     int Unknown_48;
