@@ -12,6 +12,10 @@ public:
 	{
 		JMP_THIS(0x4D3FC0);
 	}
+	~CRandomTree()	
+	{
+		JMP_THIS(0x4D4080);
+	}
 	void OnBNToUsedClicked()
 	{
 		JMP_THIS(0x4D48B0);
